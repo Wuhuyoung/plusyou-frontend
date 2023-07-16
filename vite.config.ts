@@ -11,6 +11,10 @@ export default defineConfig({
             resolvers: [VantResolver()],
         }),
     ],
+    server: {
+        port: 5173,
+        host: "0.0.0.0"  //同一局域网中其他服务器也可以访问
+    }
 })
 
 

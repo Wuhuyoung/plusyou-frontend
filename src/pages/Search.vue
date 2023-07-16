@@ -1,4 +1,5 @@
 <template>
+<!--  搜索框-->
   <form action="/">
     <van-search
         v-model="searchText"
@@ -15,6 +16,7 @@
       {{id}}
     </van-tag>
   </van-space>
+
   <van-divider>选择标签</van-divider>
   <van-tree-select
       v-model:active-id="activeIds"
@@ -25,17 +27,13 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { showToast } from 'vant';
 
 const searchText = ref('');
-const onSearch = (val) => showToast(val);
-const onCancel = () => showToast('取消');
-
 const show = ref(true);
 const activeIds = ref([]);
 const activeIndex = ref(0);
-// 标签列表
-const tags = [
+// 原始标签列表
+const originTags = [
   {
     text: '性别',
     children: [
@@ -54,11 +52,29 @@ const tags = [
     ],
   },
 ];
+// 标签列表
+const tags = ref(originTags);
+/**
+ * 搜索
+ * @param val
+ */
+const onSearch = (val) => {
+  tags.value = originTags.map(parentTag => {
+    const newTag = {...parentTag}
+    newTag.children = parentTag.children.filter(item => item.text.includes(searchText.value))
+    return newTag
+  })
+};
+
+const onCancel = () => {
+  searchText.value = ''
+  tags.value = originTags
+};
 
 // 移除标签
 const close = (id) => {
   activeIds.value = activeIds.value.filter(item => {
-    return item !== id
+    return item !== id  //将等于id的标签移除
   })
 };
 
