@@ -16,22 +16,29 @@
       {{id}}
     </van-tag>
   </van-space>
-
   <van-divider>选择标签</van-divider>
   <van-tree-select
       v-model:active-id="activeIds"
       v-model:main-active-index="activeIndex"
       :items="tags"
   />
+  <div style="padding: 4px 0">
+    <div style="padding: 0 20px">
+      <van-button round block type="primary" @click="searchResult">搜索</van-button>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import {useRouter} from "vue-router";
 
 const searchText = ref('');
-const show = ref(true);
 const activeIds = ref([]);
 const activeIndex = ref(0);
+
+const router = useRouter()
+
 // 原始标签列表
 const originTags = [
   {
@@ -55,7 +62,7 @@ const originTags = [
 // 标签列表
 const tags = ref(originTags);
 /**
- * 搜索
+ * 搜索标签
  * @param val
  */
 const onSearch = (val) => {
@@ -65,6 +72,18 @@ const onSearch = (val) => {
     return newTag
   })
 };
+
+/**
+ * 搜索用户
+ */
+const searchResult = () => {
+  router.push({
+    path: '/user/list',
+    query: {
+      tags: activeIds.value
+    }
+  })
+}
 
 const onCancel = () => {
   searchText.value = ''
