@@ -33,6 +33,9 @@
 <script setup lang="ts">
 import {CurrentUser} from '../models/user'
 import {useRouter} from 'vue-router'
+import {onMounted} from "vue";
+import myAxios from "../plugins/myAxios";
+import qs from 'qs';
 const user:CurrentUser = {
   id: 1,
   username: 'admin',
@@ -47,6 +50,23 @@ const user:CurrentUser = {
   status: 0,
   createTime: new Date(),
 }
+
+// const user: CurrentUser = null;
+//
+// onMounted(async () => {
+//   const userData = await myAxios.get('/user/current', {
+//     paramsSerializer: function (params) {
+//       return qs.stringify(params, {indices: false})
+//     }
+//   }).then((response) => {
+//     console.log("/user/current success", response)
+//     return
+//   }).catch((error) => {
+//     console.error("/user/current fail", error);
+//   })
+//
+// })
+
 const router = useRouter()
 // 跳转到编辑用户信息页
 const edit = (editKey:string, editName:string, currentValue:string|number) => {
