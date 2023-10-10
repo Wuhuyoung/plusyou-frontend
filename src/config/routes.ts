@@ -10,6 +10,7 @@ const routes = [
     { path: '/search', component: () => import('../pages/Search.vue') },
     { path: '/user/edit', component: () => import('../pages/UserEdit.vue') },
     { path: '/user/list', component: () => import('../pages/SearchResult.vue') },
+    { path: '/user/login', component: () => import('../pages/UserLogin.vue') },
 ]
 
 // 创建路由实例并传递 `routes` 配置

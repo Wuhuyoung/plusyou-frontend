@@ -29,18 +29,46 @@
 
 <script setup lang="ts">
 import {useRoute} from "vue-router";
-import {ref} from "vue";
+import {useRouter} from "vue-router";
+import {onMounted, ref} from "vue";
+import myAxios from "../plugins/myAxios";
+import { showSuccessToast, showFailToast } from 'vant';
+import {getCurrentUser} from "../states/user";
+
 const route = useRoute();
+const router = useRouter();
+
 // 修改后的字段
 const editUser = ref({
   editKey: route.query.editKey,
   editName: route.query.editName,
   currentValue: route.query.currentValue,
 })
+
+let currentUser;
+onMounted( async () => {
+  const res = await getCurrentUser();
+  currentUser = res;
+})
+
 // 修改
-const onSubmit = (values) => {
-  // todo 向后台发送请求，修改用户信息
-  console.log('submit', values);
+const onSubmit = async () => {
+  if (!currentUser) {
+    showFailToast("用户未登录");
+    router.push('/user/login')
+  }
+  console.log(currentUser)
+  // 向后台发送请求，修改用户信息
+  const res = await myAxios.post('/user/update', {
+    'id': currentUser.id,
+    [editUser.value.editKey as string]: editUser.value.currentValue // js语法，可以动态形成请求的字段属性
+  })
+  if (res.code === 0 && res.data) {
+    showSuccessToast('修改成功');
+    router.back()
+  } else {
+    showFailToast('修改失败');
+  }
 };
 
 </script>

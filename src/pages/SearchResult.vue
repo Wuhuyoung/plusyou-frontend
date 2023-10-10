@@ -40,7 +40,7 @@ onMounted(async () => {
     }
   }).then((response) => {
     console.log("/user/search/tags success", response);
-    return response.data?.data ?? [];
+    return response?.data ?? [];
   }).catch((error) => {
     console.error("/user/search/tags success", error);
     return [];
