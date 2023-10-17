@@ -1,21 +1,6 @@
 <template>
-  <van-card
-      v-for="user in userList"
-      :desc="user.profile"
-      :title="user.username"
-      :thumb="user.avatarUrl"
-  >
-    <template #tags>
-      <van-tag plain type="primary" v-for="tag in user.tags" style="margin-right: 5px; margin-top: 5px">
-        {{ tag }}
-      </van-tag>
-    </template>
-    <template #footer>
-      <van-button plain type="primary" size="mini">联系我</van-button>
-    </template>
-  </van-card>
-
-  <van-empty v-if="!userList || userList.length < 1" description="搜索结果为空" />
+  <UserCardList :userList="userList"/>
+  <van-empty v-if="!userList || userList.length < 1 && onLoading === false" description="搜索结果为空" />
 
 </template>
 
@@ -24,11 +9,13 @@ import {useRoute} from "vue-router";
 import {onMounted, ref} from "vue";
 import myAxios from '../plugins/myAxios'
 import qs from 'qs';
+import UserCardList from "../components/UserCardList.vue";
 
 const route = useRoute();
 const {tags} = route.query;
 
 const userList = ref([])
+const onLoading = ref(true)
 
 onMounted(async () => {
   const userListData = await myAxios.get('/user/search/tags', {
@@ -45,6 +32,7 @@ onMounted(async () => {
     console.error("/user/search/tags success", error);
     return [];
   })
+  onLoading.value = false;
   if (userListData) {
     userListData.forEach(user => {
       if (user.tags) {

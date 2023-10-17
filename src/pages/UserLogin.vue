@@ -44,7 +44,7 @@ const onSubmit = async (values) => {
     showSuccessToast('登录成功');
     router.replace('/'); // 如果使用push，那么回退后是登录界面，而用replace回退后不会回到登录界面
   } else {
-    showFailToast('登录失败');
+    showFailToast('登录失败，' + res.description);
   }
 };
 </script>

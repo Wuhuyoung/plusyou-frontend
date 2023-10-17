@@ -45,22 +45,16 @@ const editUser = ref({
   currentValue: route.query.currentValue,
 })
 
-let currentUser;
-onMounted( async () => {
-  const res = await getCurrentUser();
-  currentUser = res;
-})
-
 // 修改
 const onSubmit = async () => {
+  const currentUser = await getCurrentUser();
   if (!currentUser) {
-    showFailToast("用户未登录");
+    showFailToast("未登录");
     router.push('/user/login')
   }
-  console.log(currentUser)
   // 向后台发送请求，修改用户信息
   const res = await myAxios.post('/user/update', {
-    'id': currentUser.id,
+    id: currentUser.id,
     [editUser.value.editKey as string]: editUser.value.currentValue // js语法，可以动态形成请求的字段属性
   })
   if (res.code === 0 && res.data) {
